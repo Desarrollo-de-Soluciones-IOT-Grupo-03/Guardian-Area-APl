@@ -12,22 +12,22 @@ import java.util.List;
 
 @Repository
 public interface HealthMeasureRepository extends JpaRepository<HealthMeasure, Long> {
-    List<HealthMeasure> findAllByGuardianAreaDeviceRecordId(GuardianAreaDeviceRecordId guardianAreaDeviceRecordId);
-    @Query("SELECT " +
-            "NEW com.digitaldart.guardian.area.monitoring.domain.model.valueobjects.HealthMeasureDailyAverage( " +
-            "    FUNCTION('DATE', h.createdAt), " +
-            "    AVG(h.bpm.bpm), " +
-            "    AVG(h.spo2.spo2) " +
-            ") " +
-            "FROM HealthMeasure h " +
-            "WHERE FUNCTION('MONTH', h.createdAt) = :month " +
-            "AND FUNCTION('YEAR', h.createdAt) = :year " +
-            "AND h.guardianAreaDeviceRecordId = :guardianAreaDeviceRecordId " +
-            "GROUP BY FUNCTION('DATE', h.createdAt) " +
-            "ORDER BY FUNCTION('DATE', h.createdAt) ASC")
-    List<HealthMeasureDailyAverage> findDailyAveragesForCurrentMonthAndGuardian(
-            @Param("month") int month,
-            @Param("year") int year,
-            @Param("guardianAreaDeviceRecordId") GuardianAreaDeviceRecordId guardianAreaDeviceRecordId);
+  List<HealthMeasure> findAllByGuardianAreaDeviceRecordId(GuardianAreaDeviceRecordId guardianAreaDeviceRecordId);
+  @Query("SELECT " +
+      "NEW com.digitaldart.guardian.area.monitoring.domain.model.valueobjects.HealthMeasureDailyAverage( " +
+      "    FUNCTION('DATE', h.createdAt), " +
+      "    AVG(h.bpm.bpm), " +
+      "    AVG(h.spo2.spo2) " +
+      ") " +
+      "FROM HealthMeasure h " +
+      "WHERE FUNCTION('MONTH', h.createdAt) = :month " +
+      "AND FUNCTION('YEAR', h.createdAt) = :year " +
+      "AND h.guardianAreaDeviceRecordId = :guardianAreaDeviceRecordId " +
+      "GROUP BY FUNCTION('DATE', h.createdAt) " +
+      "ORDER BY FUNCTION('DATE', h.createdAt) ASC")
+  List<HealthMeasureDailyAverage> findDailyAveragesForCurrentMonthAndGuardian(
+      @Param("month") int month,
+      @Param("year") int year,
+      @Param("guardianAreaDeviceRecordId") GuardianAreaDeviceRecordId guardianAreaDeviceRecordId);
 
 }
