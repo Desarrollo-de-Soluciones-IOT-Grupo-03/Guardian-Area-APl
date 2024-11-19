@@ -3,6 +3,7 @@ package com.digitaldart.guardian.area.monitoring.domain.model.aggregates;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.AssignDeviceCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.RegisterDeviceCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.UpdateDeviceCommand;
+import com.digitaldart.guardian.area.monitoring.domain.model.commands.UpdateHealthThresholdsCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.valueobjects.*;
 import com.digitaldart.guardian.area.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
@@ -29,6 +30,7 @@ public class Device extends AuditableAbstractAggregateRoot<Device> {
     private DeviceCareModes deviceCareModes;
 
     @Setter
+    @Getter
     @Embedded
     private UserId userId;
 
@@ -41,7 +43,13 @@ public class Device extends AuditableAbstractAggregateRoot<Device> {
     @Embedded
     private ApiKey apiKey;
 
+    @Getter
+    @Setter
+    @Embedded
+    private HealthThresholds healthThresholds;
+
     public Device() {
+        this.healthThresholds = new HealthThresholds();
         this.userId = new UserId();
         this.deviceStatuses = DeviceStatuses.DISCONNECTED;
         this.deviceCareModes = DeviceCareModes.INFANT;
@@ -53,8 +61,8 @@ public class Device extends AuditableAbstractAggregateRoot<Device> {
         this.userId = userId;
     }
 
-    public Device(AssignDeviceCommand command){
-        this(new UserId(command.userId()));
+    public void assignDevice(AssignDeviceCommand command){
+        this.userId = new UserId(command.userId());
         this.guardianAreaDeviceRecordId = command.guardianAreaDeviceRecordId();
         this.deviceNickname = "-";
         this.bearer = "-";
@@ -63,6 +71,7 @@ public class Device extends AuditableAbstractAggregateRoot<Device> {
     }
 
     public Device(RegisterDeviceCommand command, String apiKey) {
+        this.healthThresholds = new HealthThresholds();
         this.userId = null;
         this.deviceNickname = null;
         this.bearer = null;
@@ -79,12 +88,13 @@ public class Device extends AuditableAbstractAggregateRoot<Device> {
         this.deviceStatuses = command.deviceStatuses();
     }
 
-    public String getDeviceRecordId() {
-        return this.guardianAreaDeviceRecordId.deviceRecordId();
+    public void UpdateHealthThresholds(UpdateHealthThresholdsCommand command) {
+        this.healthThresholds = new HealthThresholds(command.minBpm(), command.maxBpm(),command.minSpO2(), command.maxSpO2());
+
     }
 
-    public Long getUserId() {
-        return this.userId.userId();
+    public String getDeviceRecordId() {
+        return this.guardianAreaDeviceRecordId.deviceRecordId();
     }
 
 }
