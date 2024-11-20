@@ -5,6 +5,7 @@ import com.digitaldart.guardian.area.monitoring.domain.model.commands.CreateHeal
 import com.digitaldart.guardian.area.monitoring.domain.services.HealthMeasureCommandService;
 import com.digitaldart.guardian.area.monitoring.infrastructure.persistence.jpa.repositories.DeviceRepository;
 import com.digitaldart.guardian.area.monitoring.infrastructure.persistence.jpa.repositories.HealthMeasureRepository;
+import com.digitaldart.guardian.area.shared.domain.exceptions.ResourceNotFoundException;
 import com.digitaldart.guardian.area.shared.domain.exceptions.ValidationException;
 import org.springframework.stereotype.Service;
 

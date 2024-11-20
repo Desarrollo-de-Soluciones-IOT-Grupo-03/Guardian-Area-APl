@@ -6,10 +6,13 @@ import com.digitaldart.guardian.area.monitoring.domain.model.aggregates.Device;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.AssignDeviceCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.RegisterDeviceCommand;
 import com.digitaldart.guardian.area.monitoring.domain.model.commands.UpdateDeviceCommand;
+import com.digitaldart.guardian.area.monitoring.domain.model.commands.UpdateHealthThresholdsCommand;
+import com.digitaldart.guardian.area.monitoring.domain.model.valueobjects.GuardianAreaDeviceRecordId;
 import com.digitaldart.guardian.area.monitoring.domain.services.DeviceCommandService;
 import com.digitaldart.guardian.area.monitoring.infrastructure.persistence.jpa.repositories.DeviceRepository;
 import com.digitaldart.guardian.area.shared.domain.exceptions.ResourceNotFoundException;
 import com.digitaldart.guardian.area.shared.domain.exceptions.ValidationException;
+import com.digitaldart.guardian.area.shared.domain.model.valueobjects.GuidValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,7 +38,10 @@ public class DeviceCommandServiceImpl implements DeviceCommandService {
         if (device.isEmpty()) {
             throw new ResourceNotFoundException("Device not found");
         }
-        device.get().setUserId(userId.get());
+        if (device.get().getUserId() != null){
+            throw new ValidationException("Device is already assigned");
+        }
+        device.get().assignDevice(command);
         deviceRepository.save(device.get());
         return deviceRepository.findByGuardianAreaDeviceRecordId(device.get().getGuardianAreaDeviceRecordId());
     }
@@ -43,6 +49,9 @@ public class DeviceCommandServiceImpl implements DeviceCommandService {
     @Override
     public Optional<String> handle(RegisterDeviceCommand command) {
         var device = deviceRepository.findByGuardianAreaDeviceRecordId(command.guardianAreaDeviceRecordId());
+        if (!GuidValidator.isValidGuid(command.guardianAreaDeviceRecordId().deviceRecordId())){
+            throw new ValidationException("GuardianAreaDeviceRecordId must be guid");
+        }
         if (device.isPresent()) {
             throw new ValidationException("Device is already registered");
         }
@@ -59,6 +68,17 @@ public class DeviceCommandServiceImpl implements DeviceCommandService {
             throw new ValidationException("Device not found");
         }
         device.get().updateDevice(command);
+        deviceRepository.save(device.get());
+        return device;
+    }
+
+    @Override
+    public Optional<Device> handle(UpdateHealthThresholdsCommand command) {
+        var device = deviceRepository.findByGuardianAreaDeviceRecordId(command.guardianAreaDeviceRecordId());
+        if (device.isEmpty()) {
+            throw new ValidationException("Device not found");
+        }
+        device.get().UpdateHealthThresholds(command);
         deviceRepository.save(device.get());
         return device;
     }
