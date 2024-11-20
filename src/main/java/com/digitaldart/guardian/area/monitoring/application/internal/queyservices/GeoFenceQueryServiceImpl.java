@@ -2,6 +2,7 @@ package com.digitaldart.guardian.area.monitoring.application.internal.queyservic
 
 import com.digitaldart.guardian.area.monitoring.domain.model.aggregates.GeoFence;
 import com.digitaldart.guardian.area.monitoring.domain.model.queries.GetAllGeoFencesByGuardianAreaDeviceRecordIdQuery;
+import com.digitaldart.guardian.area.monitoring.domain.model.queries.GetDeviceByGuardianAreaDeviceRecordIdQuery;
 import com.digitaldart.guardian.area.monitoring.domain.model.queries.GetGeoFenceByIdQuery;
 import com.digitaldart.guardian.area.monitoring.domain.services.GeoFenceQueryService;
 import com.digitaldart.guardian.area.monitoring.infrastructure.persistence.jpa.repositories.DeviceRepository;
