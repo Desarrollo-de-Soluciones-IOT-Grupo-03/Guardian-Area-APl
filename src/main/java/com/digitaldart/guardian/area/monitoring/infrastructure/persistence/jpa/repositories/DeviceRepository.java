@@ -12,8 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Long> {
-    List<Device> findAllByUserId(UserId userId);
-    Optional<Device> findByGuardianAreaDeviceRecordId(GuardianAreaDeviceRecordId guardianAreaDeviceRecordId);
-    boolean existsByGuardianAreaDeviceRecordId(GuardianAreaDeviceRecordId guardianAreaDeviceRecordId);
-    Optional<Device> findByGuardianAreaDeviceRecordIdAndApiKey(GuardianAreaDeviceRecordId guardianAreaDeviceRecordId, ApiKey apiKey);
+  List<Device> findAllByUserId(UserId userId);
+  Optional<Device> findByGuardianAreaDeviceRecordId(GuardianAreaDeviceRecordId guardianAreaDeviceRecordId);
+  boolean existsByGuardianAreaDeviceRecordId(GuardianAreaDeviceRecordId guardianAreaDeviceRecordId);
+  Optional<Device> findByGuardianAreaDeviceRecordIdAndApiKey(GuardianAreaDeviceRecordId guardianAreaDeviceRecordId, ApiKey apiKey);
 }
